@@ -1,0 +1,43 @@
+﻿@page "/admin/investment/edit/{InvestId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IInvestmentModelRepository _investRepo
+
+<InvestmentForm TitleOperation="Update User" investmentModel="@investmentModel"  OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string InvestId { get; set; }
+    public InvestmentModel investmentModel;
+    private string Errormsg = "";
+
+    protected override void OnInitialized()
+    {
+        investmentModel = _investRepo.GetByGuid(new Guid(InvestId));
+        base.OnInitialized();
+    }
+
+    private void FormSubmit()
+    {
+        if (investmentModel.InvestAmount > 0)
+        {
+            _investRepo.Update(investmentModel);
+
+            _navManager.NavigateTo($"admin/investment/index/" + investmentModel.UserModelId.ToString());
+        }
+        else
+        {
+            InvokeAsync(() =>
+            {
+                Errormsg = "Role is required field";
+                StateHasChanged();
+            });
+        }
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/investment/index/" + investmentModel.UserModelId.ToString());
+    }
+
+}

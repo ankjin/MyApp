@@ -1,0 +1,52 @@
+﻿@page "/admin/users/edit/{userId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject ISourcePartnerRepository _sourceRepo
+@inject IUserModelRepository _userRepo
+
+<UsersForm TitleOperation="Update User" referByUser="referByUser" user="user" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+    private IEnumerable<User> referByUser;
+    public User user;
+    private string Errormsg = "";
+    private string curPwd = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        referByUser = _userRepo.GetAll().Where(x => x.IsActive);
+        user = _userRepo.GetByGuid(new Guid(userId));
+        curPwd = user.Password;
+    }
+
+    private void FormSubmit()
+    {
+        if (!string.IsNullOrEmpty(user.RoleId.ToString()))
+        {
+            if (curPwd != user.Password)
+            {
+                user.Password = Utility.Encrypt(user.Password);
+            }
+            _userRepo.Update(user);
+
+            _navManager.NavigateTo($"admin/users/index");
+        }
+        else
+        {
+            InvokeAsync(() =>
+            {
+                Errormsg = "Role is required field";
+                StateHasChanged();
+            });
+        }
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/users/index");
+    }
+
+}

@@ -1,0 +1,56 @@
+﻿@page "/admin/info/personal/edit/{userId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IPersonalInfoRepository _personalRepo
+@inject IUserModelRepository _userRepo
+
+<PersonalForm TitleOperation="Update Banking Info" UserId="@userId" personalInfo="personalInfo"  OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+    private PersonalInfo personalInfo;
+    public User user;
+    private string Errormsg = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        personalInfo = _personalRepo.GetPersonalInfoByUserId(new Guid(userId));
+        if(personalInfo is null)
+        {
+            personalInfo = new();
+            personalInfo.DateOfBirth = DateTimeOffset.UtcNow.Date;
+        }
+    }
+
+    private void FormSubmit()
+    {
+        if(personalInfo.Id > 0)
+        {
+            _personalRepo.Update(personalInfo);
+        }
+        else
+        {
+            personalInfo.UserId = new Guid(userId);
+            _personalRepo.Create(personalInfo);
+        }
+
+
+        _navManager.NavigateTo($"admin/users/index");
+
+        //InvokeAsync(() =>
+        //{
+        //    Errormsg = "role is required field";
+        //    StateHasChanged();
+        //});
+
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/users/index");
+    }
+
+}

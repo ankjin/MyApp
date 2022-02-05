@@ -1,0 +1,233 @@
+﻿@layout MainLayoutMember
+
+@attribute [Authorize(Roles = "Admin, User")]
+@page "/member/investment/{UserId}"
+
+@inject IInvestmentModelRepository _investRepo
+
+<div class="mt-8">
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                @*Last 30 days*@
+            </h3>
+            <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                        Total Investment
+                    </dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                        @TotalInvestAmt.ToString("n2")
+                    </dd>
+                </div>
+
+                <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                        Total Payout
+                    </dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                        @TotalPayoutAmt.ToString("n2")
+                    </dd>
+                </div>
+
+                <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                        Risk Amount
+                    </dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                        @RiskAmount.ToString("n2")
+                    </dd>
+                </div>
+            </div>
+        </div>
+
+
+        @if (investmentModels is not null)
+        {
+            <div class="relative py-4">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-start">
+                    <span class="pr-3 bg-white text-lg font-medium text-gray-900">
+                        Active Investments
+                    </span>
+                </div>
+            </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul role="list" class="divide-y divide-gray-200">
+                    
+                    @foreach (var item in investmentModels.Where(x => x.Status == true))
+                    {
+                        <li>
+                            <a href="/member/investment/overview/@item.Id" class="block hover:bg-gray-50">
+                                <div class="flex items-center px-4 py-4 sm:px-6">
+                                    <div class="min-w-0 flex-1 flex items-center">
+                                        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-10 md:gap-2">
+                                            <div class="sm:col-span-1">
+                                                <p class="text-sm font-bold text-indigo-600 truncate">Plan</p>
+                                                <p class="mt-2 flex items-center text-sm text-gray-500">
+                                                    <span class="truncate">@item.PlanType.GetDisplayName()</span>
+                                                </p>
+                                            </div>
+                                            <div class="sm:col-span-3 text-center">
+                                                <div>
+                                                    <p class="text-sm text-gray-900">
+                                                        Invested Amount
+                                                    </p>
+                                                    <p class="mt-2 text-sm text-gray-500">
+                                                        @item.InvestAmount.ToString("n2")
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="sm:col-span-3 text-center">
+                                                <div>
+                                                    <p class="text-sm text-gray-900">
+                                                        Invested Date
+                                                    </p>
+                                                    <p class="mt-2 text-sm text-gray-500">
+                                                        @item.InvestDate.ToShortDateString()
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="sm:col-span-3 text-center">
+                                                <div>
+                                                    <p class="text-sm text-gray-900">
+                                                        Maturity Date
+                                                    </p>
+                                                    <p class="mt-2 text-sm text-gray-500">
+                                                        @item.InvestDateMaturity.ToShortDateString()
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        }
+
+
+
+        <div class="py-4"></div>
+
+        @if (investmentModels is not null)
+        {
+
+
+            <div class="relative py-4">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-start">
+                    <span class="pr-3 bg-white text-lg font-medium text-gray-900">
+                        Closed Investments
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul role="list" class="divide-y divide-gray-200">
+                    @foreach (var item in investmentModels.Where(x => x.Status == false))
+                {
+                    <li>
+                        <a href="#" class="block hover:bg-gray-50">
+                            <div class="flex items-center px-4 py-4 sm:px-6">
+                                <div class="min-w-0 flex-1 flex items-center">
+                                    @*<div class="flex-shrink-0">
+                                        <img class="h-12 w-12 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                    </div>*@
+                                    <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-10 md:gap-2">
+                                        <div class="sm:col-span-1">
+                                            <p class="text-sm font-bold text-indigo-600 truncate">Plan</p>
+                                            <p class="mt-2 flex items-center text-sm text-gray-500">
+                                                <span class="truncate">@item.PlanType.GetDisplayName()</span>
+                                            </p>
+                                        </div>
+                                        <div class="sm:col-span-3 text-center">
+                                            <div>
+                                                <p class="text-sm text-gray-900">
+                                                    Invested Amount
+                                                </p>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    @item.InvestAmount
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="sm:col-span-3 text-center">
+                                            <div>
+                                                <p class="text-sm text-gray-900">
+                                                    Invested Date
+                                                </p>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    @item.InvestDate.ToShortDateString()
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="sm:col-span-3 text-center">
+                                            <div>
+                                                <p class="text-sm text-gray-900">
+                                                    Maturity Date
+                                                </p>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    @item.InvestDateMaturity.ToShortDateString()
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <!-- Heroicon name: solid/chevron-right -->
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                }
+
+                </ul>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    IEnumerable<InvestmentModel> investmentModels;
+
+    decimal TotalInvestAmt = 0;
+    decimal TotalPayoutAmt = 0;
+    decimal RiskAmount = 0;
+
+    protected async override Task OnInitializedAsync()
+    {
+        investmentModels = await _investRepo.GetInvestmentByUserIdAsync(new Guid(UserId));
+
+        TotalInvestAmt = investmentModels.Sum(x => x.InvestAmount);
+        TotalPayoutAmt = investmentModels.Sum(x => x.InvestmentPayouts.Sum(x => x.PayoutAmount));
+
+        RiskAmount = TotalInvestAmt - TotalPayoutAmt;
+
+        await base.OnInitializedAsync();
+    }
+
+
+
+}

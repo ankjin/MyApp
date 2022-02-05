@@ -1,0 +1,222 @@
+﻿@inject IJSRuntime js
+
+@*<MainLayoutAdminBodyTitle Title="@TitleOperation" />*@
+
+<EditForm class="space-y-8 divide-y divide-gray-200" Model="role" OnValidSubmit="OnValidSubmit">
+    <div class="space-y-8 divide-y divide-gray-200">
+    </div>
+
+    <div class="mt-2">
+        <div class="sm:block">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
+                    <a @onclick="@(() => TabItemClick(1))" class="@(tab1 ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300") whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm cursor-pointer">
+                        English
+                    </a>
+
+                    @*<a @onclick="@(() => TabItemClick(2))" class="@(tab2 ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300") whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm cursor-pointer">
+                            Arabic
+                        </a>
+
+                        <a @onclick="@(() => TabItemClick(3))" class="@(tab3 ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300") whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm cursor-pointer">
+                            Common Fields
+                        </a>*@
+                </nav>
+            </div>
+        </div>
+
+
+        <div class="pt-8" style="display:@(tab1 ? "" : "none")">
+
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                <div class="sm:col-span-6">
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <InputCheckbox id="IsActive" name="IsActive" @bind-Value="@role.IsActive" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="IsActive" class="font-medium text-gray-700">Is Active</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="sm:col-span-3">
+                    <label for="first_name" class="block text-sm font-medium text-gray-700">
+                        Role Name
+                    </label>
+                    <div class="mt-1">
+                        <InputText @bind-Value="@role.RoleName" type="text" id="RoleName" name="RoleName" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="street_address" class="block text-sm font-medium text-gray-700">
+                        Sort No.
+                    </label>
+                    <div class="mt-1">
+                        <InputNumber @bind-Value="@role.SortNo" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label for="about" class="block text-sm font-medium text-gray-700">
+                        Description
+                    </label>
+                    <div class="mt-1">
+                        <InputTextArea rows="8" @bind-Value="@role.RoleDesc" type="text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                @*<div class="sm:col-span-6">
+                        <label for="about" class="block text-sm font-medium text-gray-700">
+                            Description
+                        </label>
+                        <div class="mt-1">
+                            <textarea id="Description" name="Description" rows="6" value="@Category.Description" type="text" />
+                        </div>
+                        <div class="mt-1">
+                            <InputTextArea rows="8" @bind-Value="@Category.Description" type="text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                    </div>*@
+
+
+            </div>
+        </div>
+
+
+        <div class="pt-8" style="display:@(tab2 ? "" : "none")">
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                @*<div class="sm:col-span-3">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            Category Name
+                        </label>
+                        <div class="mt-1">
+                            <InputText @bind-Value="@Category.CategoryNameAr" type="text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                    </div>
+                    <div class="sm:col-span-6">
+                        <label for="about" class="block text-sm font-medium text-gray-700">
+                            Description
+                        </label>
+                        <div class="mt-1">
+                            <textarea id="DescriptionAr" name="DescriptionAr" rows="6" value="@Category.DescriptionAr" type="text" />
+                        </div>
+                        <div class="mt-1">
+                            <InputTextArea rows="8" @bind-Value="@Category.DescriptionAr" type="text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+
+
+
+
+
+        <div class="pt-8" style="display:@(tab3 ? "" : "none")">
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                <!--<div class="sm:col-span-3">
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <InputCheckbox id="IsActive" name="IsActive" @bind-Value="@Category.IsActive" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="IsActive" class="font-medium text-gray-700">Is Active</label>-->
+                @*<p class="text-gray-500">Get notified when someones posts a comment on a posting.</p>*@
+                <!--</div>
+                    </div>
+                </div>-->
+                @*<div class="sm:col-span-3">
+                        <label for="street_address" class="block text-sm font-medium text-gray-700">
+                            Sort No.
+                        </label>
+                        <div class="mt-1">
+                            <InputNumber @bind-Value="@Category.SortNo" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                    </div>*@
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="pt-4 pb-4">
+        <div class="flex justify-end">
+            <button type="button" @onclick="@OnCancelSubmit" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+            </button>
+            <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Save
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public string TitleOperation { get; set; }
+    [Parameter]
+    public Role role { get; set; }
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnCancelSubmit { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            //await js.CKEditorFileman1();
+            //await js.CKEditorFileman2();
+            //await js.CustomImage1();
+        }
+
+    }
+
+    private bool tab1 { get; set; } = true;
+    private bool tab2 { get; set; }
+    private bool tab3 { get; set; }
+    private void TabItemClick(int tabId)
+    {
+        tab1 = false;
+        tab2 = false;
+        tab3 = false;
+
+        switch (tabId)
+        {
+            case 1:
+                tab1 = true;
+                break;
+            case 2:
+                tab2 = true;
+                break;
+            case 3:
+                tab3 = true;
+                break;
+        }
+    }
+
+
+}

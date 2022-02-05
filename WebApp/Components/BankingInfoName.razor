@@ -1,0 +1,20 @@
+﻿@inject IBankingInfoRepository _bankingRepo
+
+
+@bankInfo.BankName
+
+
+@code {
+
+    [Parameter]
+    public int BankinfoId { get; set; }
+
+    BankingInfo bankInfo;
+
+    protected override Task OnInitializedAsync()
+    {
+        bankInfo = _bankingRepo.GetById(BankinfoId);
+        return base.OnInitializedAsync();
+    }
+
+}

@@ -1,0 +1,246 @@
+﻿@inject IJSRuntime js
+@inject IBankingInfoRepository _bankingRepo
+
+
+<EditForm class="space-y-8 divide-y divide-gray-200" Model="investmentModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="space-y-8 divide-y divide-gray-200">
+    </div>
+
+    <div class="mt-2">
+
+
+        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+            <div class="sm:col-span-6">
+                <div class="relative flex items-start">
+                    <div class="flex items-center h-5">
+                        <InputCheckbox id="IsActive" name="IsActive" @bind-Value="@investmentModel.IsActive" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="IsActive" class="font-medium text-gray-700">Is Active</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="sm:col-span-1">
+                <label class="block text-sm font-medium text-gray-700">Account Type</label>
+                <div class="mt-1">
+                    <InputSelect @bind-Value="@investmentModel.PlanType" @onclick="@((p) => OnPlanTypeSelectionChange(investmentModel.PlanType))" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        @foreach (PlanType e in Enum.GetValues(typeof(PlanType)))
+                        {
+                            <option value="@e">@e.GetDisplayName()</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => investmentModel.PlanType" />
+                </div>
+            </div>
+
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700">Investment Amount</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                            $
+                        </span>
+                    </div>
+                    <InputNumber @bind-Value="@investmentModel.InvestAmount" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" aria-describedby="price-currency" />
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm" id="price-currency">
+                            USD
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sm:col-span-3">
+                <label for="first_name" class="block text-sm font-medium text-gray-700">
+                    Investment Date
+                </label>
+                <div class="mt-1">
+                    <!-- Use normal input element for type date if you want to have onchnage event.
+                         InputDate doesn't have it out of the box -->
+                    <input @bind-value=@investmentModel.InvestDate @bind-value:event="oninput" @onchange="@OnDateChange" type="date" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="first_name" class="block text-sm font-medium text-gray-700">
+                    Mobile
+                </label>
+                <div class="mt-1">
+                    <InputDate @bind-Value="@investmentModel.InvestDateMaturity" type="date" readonly name="Mobile" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => investmentModel.InvestDateMaturity" />
+                </div>
+            </div>
+
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <InputNumber @bind-Value="@investmentModel.RateReturn" min="1" max="10" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-2 pr-8 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" aria-describedby="price-currency" />
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm" id="price-currency">
+                            %
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="first_name" class="block text-sm font-medium text-gray-700">
+                    Payout Bank
+                </label>
+                <div class="mt-1">
+                    @if (bankingInfos is not null)
+                    {
+                        <select @onchange="OnBankingSelectionChange" value="@investmentModel.BankingInfoId" class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @(string.IsNullOrEmpty(ErrorMsg) ? "" : "invalid")">
+                            @foreach (var item in bankingInfos.ToList())
+                            {
+                                <option value="@item.Id">@item.BankName</option>
+                            }
+                        </select>
+
+                        if (!string.IsNullOrEmpty(ErrorMsg))
+                        {
+                            <div class="validation-message">@ErrorMsg</div>
+                        }
+                    }
+                </div>
+            </div>
+
+
+            <div class="sm:col-span-2">
+                <label for="first_name" class="block text-sm font-medium text-gray-700">
+                    Source Bank Information
+                </label>
+                <div class="mt-1">
+                    <InputText @bind-Value="@investmentModel.SourceBankInfo" type="text" id="FirstName" name="FirstName" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => investmentModel.SourceBankInfo" />
+                </div>
+            </div>
+            <div class="sm:col-span-2">
+                <div class="relative flex items-start">
+                    <div class="flex items-center h-5">
+                        <InputCheckbox id="Status" name="Status" @bind-Value="@investmentModel.Status" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="Status" class="font-medium text-gray-700">Status</label>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+        
+
+
+
+    </div>
+
+    <div class="pt-4 pb-4">
+        <div class="flex justify-end">
+            <button type="button" @onclick="@OnCancelSubmit" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+            </button>
+            <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Save
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public string TitleOperation { get; set; }
+    [Parameter]
+    public InvestmentModel investmentModel { get; set; }
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnCancelSubmit { get; set; }
+    [Parameter]
+    public string ErrorMsg { get; set; }
+
+    IEnumerable<BankingInfo> bankingInfos;
+    DateTime invDate;
+
+    protected async override Task OnInitializedAsync()
+    {
+        bankingInfos = await _bankingRepo.GetBankingInfoByUserIdAsync(investmentModel.UserModelId);
+        if(bankingInfos.Count() > 0)
+        {
+            investmentModel.BankingInfoId = bankingInfos.Where(x => x.IsPrimary).FirstOrDefault().Id;
+        }
+    }
+
+    private void OnPlanTypeSelectionChange(PlanType planType)
+    {
+        if (planType.ToString() == "0" || string.IsNullOrEmpty(planType.ToString()))
+        {
+            return;
+        }
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void oninput()
+        {
+
+        }
+
+    private void OnDateChange(ChangeEventArgs changeEventArgs)
+    {
+        invDate = DateTime.Parse(changeEventArgs.Value.ToString());
+        investmentModel.InvestDate = invDate;
+        investmentModel.InvestDateMaturity = invDate.AddYears(3);
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+
+        //if (planType.ToString() == "0" || string.IsNullOrEmpty(planType.ToString()))
+        //{
+        //    return;
+        //}
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+        }
+
+    }
+
+    private void OnBankingSelectionChange(ChangeEventArgs changeEventArgs)
+    {
+        investmentModel.BankingInfoId = int.Parse(changeEventArgs.Value.ToString());
+
+        InvokeAsync(() =>
+        {
+            if (!string.IsNullOrEmpty(investmentModel.BankingInfoId.ToString()))
+            {
+                ErrorMsg = "";
+            }
+            else
+            {
+                ErrorMsg = "Banking is required field";
+            }
+            StateHasChanged();
+        });
+    }
+
+
+
+}

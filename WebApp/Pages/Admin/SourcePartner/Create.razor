@@ -1,0 +1,30 @@
+﻿@page "/admin/sourcepartner/create"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject ISourcePartnerRepository _sourceRepo
+
+<SourcePartnerForm TitleOperation="Create Role" source="source" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" />
+
+@code {
+
+    private SourcePartner source = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        //category.ImageUrl = "/myassets/resources/avatar.svg";
+    }
+
+    private void FormSubmit()
+    {
+        _sourceRepo.Create(source);
+
+        _navManager.NavigateTo($"admin/sourcepartner/index");
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/sourcepartner/index");
+    }
+
+}

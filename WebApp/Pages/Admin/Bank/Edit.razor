@@ -1,0 +1,43 @@
+﻿@page "/admin/bank/edit/{bankinfoId:int}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IBankingInfoRepository _bankingRepo
+@inject IUserModelRepository _userRepo
+
+@*<BankingForm TitleOperation="Update Banking Info" UserId="@bankInfo.UserId.ToString()" bankInfo="bankInfo" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />*@
+
+@code {
+
+    [Parameter]
+    public int bankinfoId { get; set; }
+    private BankModelSample bankModel;
+    public User user;
+    private string Errormsg = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        //bankInfo = _bankingRepo.GetById(bankinfoId);
+    }
+
+    private void FormSubmit()
+    {
+        //_bankingRepo.Update(bankInfo);
+
+
+        _navManager.NavigateTo($"admin/bank/" + bankModel.UserId);
+
+        //InvokeAsync(() =>
+        //{
+        //    Errormsg = "role is required field";
+        //    StateHasChanged();
+        //});
+
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/bank/" + bankModel.UserId);
+    }
+
+}

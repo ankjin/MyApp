@@ -1,0 +1,93 @@
+﻿@layout MainLayoutClean
+
+@page "/register"
+
+@inject AuthenticationStateProvider _authStateProvider
+@inject NavigationManager _navManager
+@inject IUserService _userService
+
+@*<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+    </div>*@
+
+
+<div class="mt-16 md:mt-32 sm:mx-auto sm:w-full sm:max-w-md">
+
+    <div class="mt-8">
+        <div class="bg-white mx-4 py-4 px-4 shadow rounded-xl bg-opacity-50 backdrop-filter backdrop-blur-md">
+
+
+
+            <div class="flex justify-center -mt-16">
+                <img class="border-2 w-20 h-20 rounded-full" src="myassets/resources/avatar.svg">
+            </div>
+
+
+
+            <EditForm class="space-y-6 mt-3" Model="user" OnValidSubmit="ValidateUser">
+                <div>
+                    <label for="email" class="hidden md:block text-sm font-medium text-gray-700">
+                        Email address
+                    </label>
+                    <div class="mt-1">
+                        <input id="email" name="email" type="text"  @bind="user.EmailAddress" placeholder="username" class="appearance-none block w-full px-3 py-2 bg-white bg-opacity-20 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-aabBlue focus:border-aabBlue sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="hidden md:block text-sm font-medium text-gray-700">
+                        Password
+                    </label>
+                    <div class="mt-1">
+                        <input id="password" name="password" type="password"  @bind="user.Password" placeholder="password" class="appearance-none block w-full px-3 py-2 bg-white bg-opacity-20 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-aabBlue focus:border-aabBlue sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-3 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-aabBlue hover:bg-aabBlue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-aabBlue">
+                        Sign in
+                    </button>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+@code {
+
+    private User user;
+    private string LoginMessage { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        user = new();
+        return base.OnInitializedAsync();
+    }
+
+    private async void ValidateUser()
+    {
+
+        //assume that user is valid
+        //user.Source = "APPC";
+        var returnedUser = await _userService.RegisterUserAsync(user);
+
+        if (returnedUser.EmailAddress != null)
+        {
+            await ((CustomAuthenticationStateProvider)_authStateProvider).MarkUserAsAuthenticated(returnedUser);
+            _navManager.NavigateTo("/");
+        }
+        else
+        {
+            LoginMessage = "Invalid username or password";
+        }
+    }
+
+}

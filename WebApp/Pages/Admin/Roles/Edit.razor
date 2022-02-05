@@ -1,0 +1,33 @@
+﻿@page "/admin/roles/edit/{roleId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IRoleRepository _roleRepo
+
+<RolesForm TitleOperation="Update Role" role="role" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" />
+
+@code {
+
+    [Parameter]
+    public string roleId { get; set; }
+
+    public Role role;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        role = _roleRepo.GetByGuid(new Guid(roleId));
+    }
+
+    private void FormSubmit()
+    {
+        _roleRepo.Update(role);
+
+        _navManager.NavigateTo($"admin/roles/index");
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/roles/index");
+    }
+
+}

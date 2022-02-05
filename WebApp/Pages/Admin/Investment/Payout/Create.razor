@@ -1,0 +1,57 @@
+﻿@page "/admin/investment-payout/create/{UserId}/{InvestModelId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IInvestmentModelRepository _investRepo
+@inject IInvestmentPayoutRepository _payoutRepo
+
+<PayoutForm TitleOperation="Create Investment" UserId="@UserId" investmentPayout="@investmentPayout" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    [Parameter]
+    public string InvestModelId { get; set; }
+    private InvestmentPayout investmentPayout = new();
+    private string Errormsg = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var investModel = _investRepo.GetByGuid(new Guid(InvestModelId));
+        var result = investModel.PlanType switch
+        {
+            PlanType.Monthly => (investModel.InvestAmount * investModel.RateReturn) / 100,
+            PlanType.Half_Yearly => (investModel.InvestAmount * investModel.RateReturn) / 100 * 6,
+            PlanType.Yearly => (investModel.InvestAmount * investModel.RateReturn) / 100 * 12,
+        };
+
+        investmentPayout.PayoutAmount = result;
+        investmentPayout.InvestmentModelId = new Guid(InvestModelId);
+        investmentPayout.PayoutDate = DateTime.UtcNow;
+    }
+
+    private void FormSubmit()
+    {
+        if (investmentPayout.PayoutAmount > 0)
+        {
+            investmentPayout.CreatedDate = DateTime.UtcNow;
+            _payoutRepo.Create(investmentPayout);
+
+            _navManager.NavigateTo($"admin/investment-payout/index/{UserId}/{InvestModelId}");
+        }
+        else
+        {
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/investment-payout/index/{UserId}/{InvestModelId}");
+    }
+
+}

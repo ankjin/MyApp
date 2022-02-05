@@ -1,0 +1,37 @@
+﻿@layout MainLayoutAdmin
+@page "/admin"
+
+@attribute [Authorize(Roles = "Admin")]
+@*<MainLayoutAdminBodyTitle Title="Dashboard" />*@
+
+
+
+@code
+{ protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        try
+        {
+        }
+        catch (Exception ex)
+        {
+
+        }
+        //return base.OnInitializedAsync();
+    }
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        //await jsRuntime.InvokeVoidAsync("renderHeroSlider");
+        if (firstRender)
+        {
+            //await js.CKEditorFileman1();
+            //await js.CKEditorFileman2();
+        }
+
+    } }
+

@@ -1,0 +1,50 @@
+﻿@page "/Filemanager"
+
+@*@attribute [Authorize]*@
+@inject IJSRuntime js
+@layout MainLayoutAdmin
+
+@*<MainLayoutAdminBodyTitle Title="Dashboard" />*@
+
+<AuthorizeView></AuthorizeView>
+    <div class="relative bg-white overflow-hidden">
+
+        <iframe style="width:100%; height:450px; border:1px solid silver" src="../lib/fileman/index.html?integration=custom&noselect=true">This feature requires IFRAME support</iframe>
+        <hr />
+
+    </div>
+
+
+
+
+@code
+{ 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        try
+        {
+        }
+        catch (Exception ex)
+        {
+
+        }
+        //return base.OnInitializedAsync();
+    }
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        //await jsRuntime.InvokeVoidAsync("renderHeroSlider");
+        if (firstRender)
+        {
+            //await js.CKEditorFileman1();
+            //await js.CKEditorFileman2();
+        }
+
+    }
+}
+

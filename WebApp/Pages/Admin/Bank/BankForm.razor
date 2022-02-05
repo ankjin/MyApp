@@ -1,0 +1,221 @@
+﻿@inject IJSRuntime js
+
+<div>
+    <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Bank Information
+    </h2>
+
+    <EditForm class="mt-9 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8" EditContext="EditContext" OnSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        @*<div class="sm:col-span-1">
+            <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                    <InputCheckbox id="IsPrimary" name="IsPrimary" @bind-Value="@bankInfo.IsPrimary" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="IsActive" class="font-medium text-gray-700">Is Primary</label>
+                </div>
+            </div>
+        </div>*@
+
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Account Type</label>
+            <div class="mt-1">
+                <InputSelect @bind-Value="@bankModel.AccountType" @onclick="@((p) => OnAccountTypeSelectionChange(bankModel.AccountType))" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    @foreach (BankAccountType e in Enum.GetValues(typeof(BankAccountType)))
+                    {
+                        <option value="@e">@e.GetDisplayName()</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => bankModel.AccountType" />
+            </div>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">DateSubmit</label>
+            <div class="mt-1">
+                <InputDate @bind-Value="@bankModel.DateSubmit" type="date" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.DateSubmit" />
+            </div>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">DateBirth</label>
+            <div class="mt-1">
+                <InputDate @bind-Value="@bankModel.DateOfBirth" type="date" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.DateOfBirth" />
+            </div>
+        </div>
+
+
+
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Age</label>
+            <div class="mt-1">
+                <InputNumber @bind-Value="@bankModel.Age" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.Age" class="text-2xl" />
+            </div>
+        </div>
+
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+                <input type="email" name="email" id="email" class="block w-full pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md" placeholder="you@example.com" value="adamwathan" aria-invalid="true" aria-describedby="email-error">
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <!-- Heroicon name: solid/exclamation-circle -->
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <p class="mt-2 text-sm text-red-600" id="email-error">Your password must be less than 4 characters.</p>
+        </div>
+
+
+
+
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Account Holder Name</label>
+            <div class="mt-1">
+                <InputText @bind-Value="@bankModel.AccountHolderName" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.AccountHolderName" />
+            </div>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Account Number</label>
+            <div class="mt-1">
+                <InputText @bind-Value="@bankModel.AccountNumber" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.AccountNumber" />
+            </div>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Bank Name</label>
+            <div class="mt-1">
+
+                <InputText @bind-Value="@bankModel.BankName" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.BankName" />
+            </div>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-sm font-medium text-gray-700">Branch</label>
+            <div class="mt-1">
+                <InputText @bind-Value="@bankModel.Branch" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.Branch" />
+            </div>
+        </div>
+        <div class="sm:col-span-1">
+            <div class="flex justify-between">
+                <label class="block text-sm font-medium text-gray-700">IFSC Code</label>
+                @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+            </div>
+            <div class="mt-1">
+                <InputText @bind-Value="@bankModel.IFSCCode" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                <ValidationMessage For="() => bankModel.IFSCCode" />
+            </div>
+        </div>
+
+        <div class="text-right sm:col-span-2">
+            <button type="button" @onclick="@OnCancelSubmit" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+            </button>
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Submit
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public string TitleOperation { get; set; }
+    [Parameter]
+    public BankModelSample bankModel { get; set; }
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnCancelSubmit { get; set; }
+    [Parameter]
+    public string ErrorMsg { get; set; }
+
+
+
+    public EditContext EditContext;
+    public bool saving = false;
+
+    protected override void OnInitialized()
+    {
+        bankModel = new BankModelSample()
+        {
+            DateSubmit = DateTime.Now,
+            DateOfBirth = DateTime.Now,
+            Age = 8,
+            AccountNumber = "0000-1111-2222-3333",
+            BankName = "Bank of the Philippine Island"
+        };
+        EditContext = new(bankModel);
+
+
+        //EditContext.GetValidationMessages();
+        //EditContext.IsModified();
+        //EditContext.NotifyValidationStateChanged();
+
+
+        EditContext.OnFieldChanged += EditContext_OnFieldChanged;
+
+
+        base.OnInitialized();
+    }
+
+
+    private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        Console.WriteLine($"EditContext_OnFieldChanged - {e.FieldIdentifier.FieldName}");
+        //if (e.FieldIdentifier.FieldName == nameof(bankModel.DateSubmit))
+        //{
+        //    EditContext.NotifyFieldChanged(EditContext.Field(nameof(bankModel.AccountNumber)));
+        //}
+
+        //EditContext.Validate();
+        //StateHasChanged();
+    }
+
+    protected void HandleSubmit()
+    {
+        if (!EditContext.GetValidationMessages().Any())
+        {
+            saving = true;
+        }
+    }
+
+
+
+
+
+
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            EditContext.Validate();
+
+            StateHasChanged();
+        }
+
+    }
+
+    private void OnAccountTypeSelectionChange(BankAccountType accountType)
+    {
+        if (accountType.ToString() == "0" || string.IsNullOrEmpty(accountType.ToString()))
+        {
+            return;
+        }
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

@@ -1,0 +1,254 @@
+﻿@layout MainLayoutMember
+
+@attribute [Authorize(Roles = "Admin, User")]
+@page "/member/referal-list/{userId}"
+
+@inject IUserModelRepository _userRepo
+@inject IPersonalInfoRepository _personalRepo
+
+<div class="mt-8">
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        @if (referalList is not null)
+        {
+
+
+            <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    @*Last 30 days*@
+                </h3>
+                <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                    <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6 cursor-pointer" @onclick="@((p) => ClientButtonClick(1))">
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Total Clients
+                        </dt>
+                        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                            @referalList.Count()
+                        </dd>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6 cursor-pointer" @onclick="@((p) => ClientButtonClick(2))">
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Active Clients
+                        </dt>
+                        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                            @referalList.Where(x => x.IsActive).Count()
+                        </dd>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6 cursor-pointer" @onclick="@((p) => ClientButtonClick(3))">
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Closed Clients
+                        </dt>
+                        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                            @referalList.Where(x => !x.IsActive).Count()
+                        </dd>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            @if (clientBtnClick == 1 || clientBtnClick == 2)
+            {
+
+    <div class="pt-8">
+        <div class="relative py-4">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-start">
+                <span class="pr-3 bg-white text-lg font-medium text-gray-900">
+                    Active Clients
+                </span>
+            </div>
+        </div>
+
+        @if (referalList.Where(x => x.IsActive).Count() > 0)
+        {
+
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Name
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Mobile
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Total Invested Amount
+                        </th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Edit</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+
+
+                    @foreach (var item in referalList.Where(x => x.IsActive))
+                    {
+
+
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        @*<img class="h-10 w-10 rounded-full" src="@GetUserImage(item.Id)" alt="">*@
+                                        <ProfileImage IsCursorPointerOn="true" HSize="h-10" WSize="w-10" CssOptions="rounded-full" Src="@item.UserImg64" />
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            @item.FullName
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            @item.EmailAddress
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @item.Mobile
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @item.InvestmentModels.Sum(x => x.InvestAmount).ToString("n2")
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="/member/referral-investment/@item.Id" class="text-indigo-600 hover:text-indigo-900">View</a>
+                            </td>
+                        </tr>
+
+                    }
+
+                    <!-- More people... -->
+                </tbody>
+            </table>
+        }
+
+    </div>
+            }
+
+
+            @if (clientBtnClick == 1 || clientBtnClick == 3)
+            {
+
+    <div class="pt-8">
+        <div class="relative py-4">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-start">
+                <span class="pr-3 bg-white text-lg font-medium text-gray-900">
+                    Closed Clients
+                </span>
+            </div>
+        </div>
+
+        @if (referalList.Where(x => !x.IsActive).Count() > 0)
+        {
+
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Name
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Mobile
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Total Invested Amount
+                        </th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Edit</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+
+
+                    @foreach (var item in referalList.Where(x => !x.IsActive))
+                    {
+
+
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        @*<img class="h-10 w-10 rounded-full" src="@GetUserImage(item.Id)" alt="">*@
+                                        <ProfileImage IsCursorPointerOn="true" HSize="h-10" WSize="w-10" CssOptions="rounded-full" Src="@item.UserImg64" />
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            @item.FullName
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            @item.EmailAddress
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @item.Mobile
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @item.InvestmentModels.Sum(x => x.InvestAmount).ToString("n2")
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="/member/referral-investment/@item.Id" class="text-indigo-600 hover:text-indigo-900">View</a>
+                            </td>
+                        </tr>
+
+                    }
+
+                    <!-- More people... -->
+                </tbody>
+            </table>
+        }
+
+
+
+    </div>
+            }
+
+
+        }
+
+
+
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+
+    IEnumerable<User> referalList;
+    PersonalInfo personalInfo;
+    decimal investedAmt = 0;
+
+    int clientBtnClick = 1;
+
+    protected override Task OnInitializedAsync()
+    {
+        referalList = _userRepo.GetUserWithReferalId(userId);
+        investedAmt = referalList.ToList().Sum(x => x.InvestmentModels.Sum(x => x.InvestAmount));
+        return base.OnInitializedAsync();
+    }
+
+    private void ClientButtonClick(int clientBtn)
+    {
+        clientBtnClick = clientBtn;
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+
+}

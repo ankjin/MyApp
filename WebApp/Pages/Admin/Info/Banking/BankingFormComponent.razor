@@ -1,0 +1,61 @@
+﻿<div>
+    @*<h2 class="text-3xl font-extrabold tracking-tight mb-4 sm:text-4xl">
+        Banking Information
+    </h2>*@
+
+    <BankFragment>
+        <BankOperationFragment>
+            @if (RenderOption == 1)
+            {
+                <IndexBank UserId="@UserId" BankRenderOption="RenderBankFragment" BankInfoId="RenderBankInfoId" />
+            }
+            @if (RenderOption == 2)
+            {
+                <CreateBank UserId="@UserId" BankRenderOption="RenderBankFragment" />
+            }
+            @if (RenderOption == 3)
+            {
+                <EditBank BankinfoId="@BakInfoId" BankRenderOption="RenderBankFragment" />
+            }
+        </BankOperationFragment>
+    </BankFragment>
+
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    public IEnumerable<BankingInfo> bankInfos;
+    private int OddEven;
+
+    int RenderOption = 1;
+    int BakInfoId = 0;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void RenderBankFragment(int p)
+    {
+        RenderOption = p;
+
+        InvokeAsync(() => {
+            StateHasChanged();
+        });
+    }
+    private void RenderBankInfoId(int bankinfoId)
+    {
+        RenderOption = 3;
+        BakInfoId = bankinfoId;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+}

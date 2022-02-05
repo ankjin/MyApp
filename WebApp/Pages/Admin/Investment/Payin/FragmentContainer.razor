@@ -1,0 +1,61 @@
+﻿<div>
+    @*<h2 class="text-3xl font-extrabold tracking-tight mb-4 sm:text-4xl">
+        Payin
+    </h2>*@
+
+    <PayinFragment>
+        <ChildContentPayin>
+            @if (RenderOption == 1)
+            {
+                <IndexPayin UserId="@UserId" RenderView="RenderView" ReturnedId="CallBackId" />
+            }
+            @if (RenderOption == 2)
+            {
+                <CreatePayin UserId="@UserId" RenderView="RenderView" />
+            }
+            @if (RenderOption == 3)
+            {
+                <EditPayin InvestModelId="@InvestModelId" RenderView="RenderView" />
+            }
+        </ChildContentPayin>
+    </PayinFragment>
+
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    public IEnumerable<InvestmentModel> investmentModels;
+    private int OddEven;
+
+    int RenderOption = 1;
+    string InvestModelId = "";
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void RenderView(int p)
+    {
+        RenderOption = p;
+
+        InvokeAsync(() => {
+            StateHasChanged();
+        });
+    }
+    private void CallBackId(string investModelId)
+    {
+        RenderOption = 3;
+        InvestModelId = investModelId;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+}

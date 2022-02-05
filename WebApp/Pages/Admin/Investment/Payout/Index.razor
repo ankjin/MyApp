@@ -1,0 +1,167 @@
+﻿@page "/admin/investment-payout/index/{UserId}/{InvestModelId}"
+@attribute [Authorize(Roles = "Admin")]
+
+@using System.ComponentModel.DataAnnotations
+@inject IInvestmentModelRepository _investRepo
+@inject IInvestmentPayoutRepository _payoutRepo
+@inject IModalService _modal
+
+@if (investmentModel != null)
+{
+    <div>
+        <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                @investmentModel.PlanType.GetDisplayName()
+            </h3>
+        </div>
+            <div class="mt-5 border-t border-gray-200">
+                <div class="sm:divide-y sm:divide-gray-200">
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Invested Amount
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        @investmentModel.InvestAmount.ToString("n2")
+                    </dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Rate Return
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        @investmentModel.RateReturn
+                    </dd>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (investmentPayout != null)
+{
+
+    <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Payout Date
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Amount
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Mode
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Bank
+                                </th>
+                                <th scope="col" class="relative px-6 py-3">
+                                    <a href="admin/investment-payout/create/@UserId/@InvestModelId">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach (var item in investmentPayout)
+                            {
+
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @item.PayoutDate.ToShortDateString()
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @item.PayoutAmount.ToString("n2")
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @item.ModeOfPayment
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">                                        
+                                        <BankingInfoName BankinfoId="@item.BankingInfoId" />
+                                    </td>
+                                    <td class="flex mt-3 px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a class="px-2" href="admin/investment-payout/edit/@UserId/@item.Id">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                        </a>
+                                        <a class="px-2 cursor-pointer" @onclick="@((p) => DeleteItem(item.Id, item.PayoutAmount))">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    [Parameter]
+    public string InvestModelId { get; set; }
+    public IEnumerable<InvestmentPayout> investmentPayout;
+    InvestmentModel investmentModel;
+    private int OddEven;
+
+    protected async override Task OnInitializedAsync()
+    {
+        investmentModel = _investRepo.GetByGuid(new Guid(InvestModelId));
+        await InitLoadAsync();
+    }
+    private async Task InitLoadAsync()
+    {
+        investmentPayout = await _payoutRepo.GetPayoutsByInvestmentIdAsync(new Guid(InvestModelId));
+    }
+
+    private async void DeleteItem(Guid id, decimal itemName)
+    {
+
+
+        var parameters = new ModalParameters();
+        parameters.Add("paramString", itemName.ToString("n2"));
+
+
+        var options = new ModalOptions()
+        {
+            HideCloseButton = true,
+            DisableBackgroundCancel = false,
+            Class = "blazored-modal",
+            HideHeader = true,
+            Animation = ModalAnimation.FadeInOut(0.5)
+        };
+
+        var login = _modal.Show<Throw>("", parameters, options);
+
+        var result = await login.Result;
+
+        if (!result.Cancelled)
+        {
+            InvestmentPayout u = _payoutRepo.GetByGuid(id);
+
+            _payoutRepo.Delete(u);
+
+            await InvokeAsync(async () =>
+            {
+                await InitLoadAsync();
+                StateHasChanged();
+            });
+        }
+    }
+
+
+}

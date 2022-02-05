@@ -1,0 +1,30 @@
+﻿@page "/admin/roles/create"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IRoleRepository _roleRepo
+
+<RolesForm TitleOperation="Create Role" role="role" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" />
+
+@code {
+
+    private Role role = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        //category.ImageUrl = "/myassets/resources/avatar.svg";
+    }
+
+    private void FormSubmit()
+    {
+        _roleRepo.Create(role);
+
+        _navManager.NavigateTo($"admin/roles/index");
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/roles/index");
+    }
+
+}

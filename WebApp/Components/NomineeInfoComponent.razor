@@ -1,0 +1,128 @@
+﻿@inject INomineeInfoRepository _nomineeRepo
+
+
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Nominee Information
+        </h3>
+    </div>
+
+
+    @if (nomineeInfo is not null)
+    {
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Full name
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    @nomineeInfo.Name
+                </dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                Date of Birth
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.DateOfBirth.ToShortDateString()
+            </dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                Email address
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.Email
+            </dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                Mobile
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.MobileNumber
+            </dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                Address
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.NomineeAddress
+            </dd>
+        </div>
+
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                ID Type 1
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.IDType1
+            </dd>
+        </div>
+
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                ID Number 1
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.IDNumber1
+            </dd>
+        </div>
+
+
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                ID Type 2
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.IDType2
+            </dd>
+        </div>
+
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+                ID Number 2
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                @nomineeInfo.IDNumber2
+            </dd>
+        </div>
+
+
+
+        </dl>
+    </div>
+
+}
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    @code {
+
+        [Parameter]
+        public string userId { get; set; }
+
+        NomineeInfo nomineeInfo;
+
+        protected override Task OnInitializedAsync()
+        {
+            nomineeInfo = _nomineeRepo.GetNomineeInfoByUserId(new Guid(userId));
+            return base.OnInitializedAsync();
+        }
+    }

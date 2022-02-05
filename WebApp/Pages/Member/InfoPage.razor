@@ -1,0 +1,54 @@
+﻿@layout MainLayoutMember
+
+@attribute [Authorize(Roles = "Admin, User")]
+@page "/member/information/{userId}"
+
+
+
+<div class="mt-8">
+
+
+
+    <TabComponent>
+        <Personal>
+            <PersonalInfoComponent userId="@userId" />
+        </Personal>
+        <Banking>
+            <BankingInfoComponent userId="@userId" />
+        </Banking>
+        <Nominee>
+            <NomineeInfoComponent userId="@userId" />
+        </Nominee>
+    </TabComponent>
+
+
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+
+    //List<TabItem> tabItems = new List<TabItem>();
+    //int activeTab { get; set; }
+
+    //protected override Task OnInitializedAsync()
+    //{
+    //    tabItems.Add(new TabItem { Id = 0, Name = "Profile Info", Href = "", IsCurrent = false });
+    //    tabItems.Add(new TabItem { Id = 1, Name = "Banking Info", Href = "", IsCurrent = false });
+    //    tabItems.Add(new TabItem { Id = 2, Name = "Nominee Info", Href = "", IsCurrent = false });
+    //    activeTab = 0;
+
+    //    return base.OnInitializedAsync();
+    //}
+
+    //void TabChangedHandler(int newIndex)
+    //{
+    //    activeTab = newIndex;
+    //}
+
+
+
+}

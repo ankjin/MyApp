@@ -1,0 +1,151 @@
+﻿@inject INomineeInfoRepository _nomineeRepo
+
+    <div>
+        @*<h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Nominee Information
+        </h2>*@
+
+        <EditForm class="mt-9 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8" Model="nomineeInfo" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                <div class="mt-1">
+                    <InputDate @bind-Value="@nomineeInfo.DateOfBirth" type="date" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.DateOfBirth" />
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Name</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.Name" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.Name" />
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+                <label class="block text-sm font-medium text-gray-700">Mobile</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.MobileNumber" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.MobileNumber" />
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.Email" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.Email" />
+                </div>
+            </div>
+
+
+            <div class="sm:col-span-1">
+                <label class="block text-sm font-medium text-gray-700">ID Type1</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.IDType1" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.IDType1" />
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+                <div class="flex justify-between">
+                    <label class="block text-sm font-medium text-gray-700">ID Number1</label>
+                    @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+                </div>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.IDNumber1" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.IDNumber1" />
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label class="block text-sm font-medium text-gray-700">ID Type2</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.IDType2" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.IDType2" />
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+                <div class="flex justify-between">
+                    <label class="block text-sm font-medium text-gray-700">ID Number2</label>
+                    @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+                </div>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.IDNumber2" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.IDNumber2" />
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <div class="flex justify-between">
+                    <label class="block text-sm font-medium text-gray-700">Address</label>
+                    @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+                </div>
+                <div class="mt-1">
+                    <InputText @bind-Value="@nomineeInfo.NomineeAddress" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                    <ValidationMessage For="() => nomineeInfo.NomineeAddress" />
+                </div>
+            </div>
+
+            @*<div class="sm:col-span-2">
+                <div class="flex justify-between">
+                    <label for="how-can-we-help" class="block text-sm font-medium text-gray-700">How can we help you?</label>
+                    <span id="how-can-we-help-description" class="text-sm text-gray-500">Max. 500 characters</span>
+                </div>
+                <div class="mt-1">
+                    <textarea id="how-can-we-help" name="how-can-we-help" aria-describedby="how-can-we-help-description" rows="4" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"></textarea>
+                </div>
+            </div>*@
+
+            <div class="text-right sm:col-span-2">
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Submit
+                </button>
+            </div>
+        </EditForm>
+    </div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+
+    public NomineeInfo nomineeInfo { get; set; }
+
+    protected override void OnInitialized()
+    {
+        nomineeInfo = _nomineeRepo.GetNomineeInfoByUserId(new Guid(UserId));
+        if (nomineeInfo is null)
+        {
+            nomineeInfo = new();
+            nomineeInfo.DateOfBirth = DateTimeOffset.UtcNow.Date;
+        }
+        base.OnInitialized();
+    }
+
+    private void OnValidSubmit()
+    {
+        if (nomineeInfo.Id > 0)
+        {
+            _nomineeRepo.Update(nomineeInfo);
+        }
+        else
+        {
+            nomineeInfo.UserId = new Guid(UserId);
+            _nomineeRepo.Create(nomineeInfo);
+        }
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+
+        }
+    }
+
+}

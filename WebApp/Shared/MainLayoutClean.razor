@@ -1,0 +1,85 @@
+﻿@inherits LayoutComponentBase
+@{
+    IList<string> img = new List<string>();
+
+    img.Add("https://www.toyota.com/content/dam/toyota/homepage/promotions/promo-main.png");
+    img.Add("https://wallpaperaccess.com/full/1542975.jpg");
+    img.Add("https://wallpaperaccess.com/full/1401526.jpg");
+    img.Add("https://wallpaperaccess.com/full/1411772.jpg");
+    img.Add("https://wallpaperaccess.com/full/1543050.jpg");
+    img.Add("https://wallpaperaccess.com/full/2777859.jpg");
+    img.Add("https://wallpaperaccess.com/full/1542977.jpg");
+    img.Add("https://wallpaperaccess.com/full/1486066.jpg");
+
+    Random rnd = new Random();
+    int r = rnd.Next(img.Count);
+    string imgUrl = (string)img[r];
+}
+
+
+<div class="bg-cover" style="background-image: url('_content/webapp/myassets/resources/E1.jpg'); ">
+
+    <!--
+      This example requires CSS v2.0+
+
+      This example requires some changes to your config:
+      module.exports = {
+        // ...
+        plugins: [
+          // ...
+          require('/forms'),
+        ]
+      }
+    -->
+
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+
+    <div class="bg-fixed">
+        <!-- https://stmallstoreprd01.blob.core.windows.net/b2c/toyota/images/background.jpg -->
+        <div class="min-h-screen bg-gray-100 bg-opacity-50 flex flex-col py-6 sm:px-6 lg:px-8">
+
+
+
+
+
+            @Body
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+@code {
+
+
+
+}

@@ -1,0 +1,112 @@
+﻿
+<div class="mt-5 flex-grow flex flex-col">
+    <nav class="flex-1 px-2 space-y-1 bg-white" aria-label="Sidebar">
+        <div>
+            <!-- Current: "bg-gray-100 text-gray-900", Default: "bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900" -->
+            <a href="admin" @onclick="@(() => CollapaseNavMenu.InvokeAsync(false))" class="text-gray-900 group w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md hover:text-gray-900 hover:bg-gray-50">
+                <!--
+                  Heroicon name: outline/home
+
+                  Current: "text-gray-500", Default: "text-gray-400 group-hover:text-gray-500"
+                -->
+                <svg class="text-gray-500 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Dashboard
+            </a>
+            <!-- Current: "bg-gray-100 text-gray-900", Default: "bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900" -->
+            <a href="Filemanager" @onclick="@(() => CollapaseNavMenu.InvokeAsync(false))" class="text-gray-900 group w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md hover:text-gray-900 hover:bg-gray-50">
+                <!--
+                  Heroicon name: outline/home
+
+                  Current: "text-gray-500", Default: "text-gray-400 group-hover:text-gray-500"
+                -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+                </svg>
+                File Manager
+            </a>
+        </div>
+
+
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                @*<div class="space-y-1">
+                    <button type="button" class="bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center pl-2 pr-1 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-controls="sub-menu-1" aria-expanded="false">
+                        <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Manage Members
+                        <svg class="text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150 rotate-90" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="space-y-1" id="sub-menu-1">
+                        <a href="admin/bank/create" class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                            Accounts
+                        </a>
+                        <a href="admin" class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                            Settings
+                        </a>
+                    </div>
+                </div>*@
+            </Authorized>
+        </AuthorizeView>
+
+
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <div class="space-y-1">
+                    <button type="button" class="bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center pl-2 pr-1 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-controls="sub-menu-3" aria-expanded="false">
+                        <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Manage Users
+                        <svg class="text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150 rotate-90" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="space-y-1" id="sub-menu-3">
+                        <a href="admin/sourcepartner/index" @onclick="@(() => CollapaseNavMenu.InvokeAsync(false))" class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                            Source Partner
+                        </a>
+                        <a href="admin/roles/index" @onclick="@(() => CollapaseNavMenu.InvokeAsync(false))" class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                            Roles
+                        </a>
+                        <a href="admin/users/index" @onclick="@(() => CollapaseNavMenu.InvokeAsync(false))" class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                            Users
+                        </a>
+                    </div>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+
+    </nav>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public EventCallback<bool> CollapaseNavMenu { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+}

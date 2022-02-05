@@ -1,0 +1,49 @@
+﻿@inject NavigationManager _navManager
+@inject IBankingInfoRepository _bankingRepo
+
+<BankingForm TitleOperation="Update Banking Info" UserId="@UserId" bankInfo="bankInfo" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string UserId { get; set; }
+    private BankingInfo bankInfo;
+    public User user;
+    private string Errormsg = "";
+
+    [Parameter]
+    public EventCallback<int> BankRenderOption { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        bankInfo = new();
+    }
+
+    private void FormSubmit()
+    {
+        bankInfo.UserId = new Guid(UserId);
+        _bankingRepo.Create(bankInfo);
+
+
+        OnEventCallback();
+
+        //InvokeAsync(() =>
+        //{
+        //    Errormsg = "role is required field";
+        //    StateHasChanged();
+        //});
+
+    }
+    private void FormCancel()
+    {
+        OnEventCallback();
+    }
+
+    private async void OnEventCallback()
+    {
+        await BankRenderOption.InvokeAsync(1);
+    }
+
+}

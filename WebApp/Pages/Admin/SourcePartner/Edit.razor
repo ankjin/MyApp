@@ -1,0 +1,33 @@
+﻿@page "/admin/sourcepartner/edit/{sourceId:int}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject ISourcePartnerRepository _sourceRepo
+
+<SourcePartnerForm TitleOperation="Update Source" source="source" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" />
+
+@code {
+
+    [Parameter]
+    public int sourceId { get; set; }
+
+    public SourcePartner source;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        source = _sourceRepo.GetById(sourceId);
+    }
+
+    private void FormSubmit()
+    {
+        _sourceRepo.Update(source);
+
+        _navManager.NavigateTo($"admin/sourcepartner/index");
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/sourcepartner/index");
+    }
+
+}

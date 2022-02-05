@@ -1,0 +1,45 @@
+﻿@page "/admin/investment-payout/edit/{UserId}/{InvestPayoutId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IInvestmentPayoutRepository _payoutRepo
+
+<PayoutForm TitleOperation="Update User" UserId="@UserId" investmentPayout="@investmentPayout"  OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string UserId { get; set; }
+    [Parameter]
+    public string InvestPayoutId { get; set; }
+    public InvestmentPayout investmentPayout;
+    private string Errormsg = "";
+
+    protected override void OnInitialized()
+    {
+        investmentPayout = _payoutRepo.GetByGuid(new Guid(InvestPayoutId));
+        base.OnInitialized();
+    }
+
+    private void FormSubmit()
+    {
+        if (investmentPayout.PayoutAmount > 0)
+        {
+            _payoutRepo.Update(investmentPayout);
+
+            _navManager.NavigateTo($"admin/investment-payout/index/{UserId}/{investmentPayout.InvestmentModelId}");
+        }
+        else
+        {
+            InvokeAsync(() =>
+            {
+                Errormsg = "Role is required field";
+                StateHasChanged();
+            });
+        }
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/investment-payout/index/{UserId}/{investmentPayout.InvestmentModelId}");
+    }
+
+}

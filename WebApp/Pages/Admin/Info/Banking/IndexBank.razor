@@ -1,0 +1,131 @@
+﻿@inject IBankingInfoRepository _bankingRepo
+
+    @if (bankInfos != null)
+    {
+
+        <div class="flex flex-col">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Account Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Account Number
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Bank Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Primary
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a class="cursor-pointer" @onclick="@(async() => await BankRenderOption.InvokeAsync(2))">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach (var item in bankInfos)
+                                {
+                                    OddEven = 1;
+
+                                    <tr class="@(OddEven % 2 == 0 ? "bg-gray-50" : "bg-white")">
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                            @item.AccountHolderName
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                            @item.AccountNumber
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                            @item.BankName
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                            <input id="IsActive" name="IsActive" @bind="@item.IsPrimary" @onclick="@((p) => ActiveToggle(item.Id, item.IsPrimary))" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                                        </td>
+                                        <td class="flex items-center px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                                            <a class="px-2 cursor-pointer" @onclick="@(async() => await BankInfoId.InvokeAsync(item.Id))">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                </svg>
+                                            </a>
+                                            <a class="px-2 cursor-pointer">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    OddEven += 1;
+                                }
+
+                                <!-- More people... -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    public IEnumerable<BankingInfo> bankInfos;
+    private int OddEven;
+    //int RenderOption = 1;
+
+    [Parameter]
+    public EventCallback<int> BankRenderOption { get; set; }
+    [Parameter]
+    public EventCallback<int> BankInfoId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        bankInfos = _bankingRepo.GetBankingInfoByUserId(new Guid(UserId));
+    }
+
+    //private void RenderBankFragment(int p)
+    //{
+    //    RenderOption = p;
+
+    //    InvokeAsync(() => {
+    //        StateHasChanged();
+    //    });
+    //}
+
+    private void ActiveToggle(int id, bool val)
+    {
+        if (val)
+            return;
+
+        //var bankList = await _bankingRepo.GetAllAsync();
+
+        //bankList.ToList().ForEach(s => s.IsPrimary = false);
+        foreach (var item in bankInfos.ToList())
+        {
+            if (item.Id == id)
+            {
+                item.IsPrimary = !val;
+            }
+            else
+            {
+                item.IsPrimary = val;
+            }
+            _bankingRepo.Update(item);
+        }
+
+    }
+
+}

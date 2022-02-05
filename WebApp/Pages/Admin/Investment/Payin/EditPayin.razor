@@ -1,0 +1,50 @@
+﻿@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject IInvestmentModelRepository _investRepo
+
+<InvestmentForm TitleOperation="Update User" investmentModel="@investmentModel"  OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string InvestModelId { get; set; }
+    public InvestmentModel investmentModel;
+    private string Errormsg = "";
+
+    [Parameter]
+    public EventCallback<int> RenderView { get; set; }
+
+    protected override void OnInitialized()
+    {
+        investmentModel = _investRepo.GetByGuid(new Guid(InvestModelId));
+        base.OnInitialized();
+    }
+
+    private void FormSubmit()
+    {
+        if (investmentModel.InvestAmount > 0)
+        {
+            _investRepo.Update(investmentModel);
+
+            OnEventCallback();
+        }
+        else
+        {
+            InvokeAsync(() =>
+            {
+                Errormsg = "Role is required field";
+                StateHasChanged();
+            });
+        }
+    }
+    private void FormCancel()
+    {
+        OnEventCallback();
+    }
+
+    private async void OnEventCallback()
+    {
+        await RenderView.InvokeAsync(1);
+    }
+
+}

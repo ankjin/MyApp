@@ -1,0 +1,200 @@
+﻿@layout MainLayoutMember
+
+@attribute [Authorize(Roles = "Admin, User")]
+@page "/member/investment/overview/{InvestId}"
+@inject IInvestmentModelRepository _investRepo
+
+<div class="mt-8">
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+
+        @if (investmentModel is not null)
+        {
+
+
+
+
+            <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    @*Last 30 days*@
+                </h3>
+                <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
+                    <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                        Invested Amount
+                    </dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                        @investmentModel.InvestAmount.ToString("n2")
+                    </dd>
+            </div>
+
+            <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                    Payout Amount
+                </dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    @investmentModel.InvestmentPayouts.Sum(x => x.PayoutAmount).ToString("n2")
+                </dd>
+            </div>
+
+            <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                    Balance Capital
+                </dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    @investmentModel.InvestAmount.ToString("n2")
+                </dd>
+            </div>
+
+            <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                    Total Return
+                </dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    @investmentModel.InvestmentPayouts.Sum(x => x.PayoutAmount).ToString("n2")
+                </dd>
+            </div>
+            </dl>
+        </div>
+
+
+
+
+
+
+
+    <div class="my-8">
+        <div class="grid grid-cols-10 gap-4">
+            <div class="sm:col-span-2">Plan</div>
+            <div class="sm:col-span-3">@investmentModel.PlanType.GetDisplayName()</div>
+
+            <div class="sm:col-span-2">Payout Amount</div>
+            <div class="sm:col-span-3">@PayAmount.ToString("n2")</div>
+
+
+            <div class="sm:col-span-2">Invested On</div>
+            <div class="sm:col-span-3">@investmentModel.InvestDate.ToString("dd-MMM-yyyy")</div>
+            <div class="sm:col-span-2">Last Payout</div>
+            <div class="sm:col-span-3">
+                @if (investmentModel.InvestmentPayouts.Count() > 0)
+                {
+                    @investmentModel.InvestmentPayouts.LastOrDefault().PayoutAmount.ToString("n2")
+                }
+
+            </div>
+
+
+            <div class="sm:col-span-2">Maturity Date</div>
+            <div class="sm:col-span-3">@investmentModel.InvestDateMaturity.ToShortDateString()</div>
+            <div class="sm:col-span-2">Next Payment Date</div>
+            <div class="sm:col-span-3">@investmentModel.InvestDate.AddDays(45).ToShortDateString()</div>
+
+
+            <div class="sm:col-span-2">Payout %</div>
+            <div class="sm:col-span-3">@investmentModel.RateReturn</div>
+            <div class="sm:col-span-2">Payout Mode</div>
+            <div class="sm:col-span-3">
+                @if (investmentModel.InvestmentPayouts.Count() > 0)
+                {
+                    <BankingInfoName BankinfoId="@investmentModel.InvestmentPayouts.LastOrDefault().BankingInfoId" />
+                }
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+        <div class="flex flex-col">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Payout Date
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Amount
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Mode
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Bank
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach (var item in investmentModel.InvestmentPayouts)
+                                {
+
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            @item.PayoutDate.ToShortDateString()
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            @item.PayoutAmount.ToString("n2")
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            @item.ModeOfPayment
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <BankingInfoName BankinfoId="@item.BankingInfoId" />
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    }
+
+
+
+    </div>
+    </div>
+
+
+    @code {
+        [Parameter]
+        public string InvestId { get; set; }
+        InvestmentModel investmentModel;
+        decimal PayAmount = 0;
+        protected override Task OnInitializedAsync()
+        {
+            investmentModel = _investRepo.GetInvestmentByIdWithPayouts(new Guid(InvestId));
+            if (investmentModel.PlanType == PlanType.Monthly)
+            {
+
+                PayAmount = (investmentModel.InvestAmount * investmentModel.RateReturn) / 100;
+            }
+            if (investmentModel.PlanType == PlanType.Half_Yearly)
+            {
+
+                PayAmount = (investmentModel.InvestAmount * investmentModel.RateReturn) / 100 * 6;
+            }
+            if (investmentModel.PlanType == PlanType.Yearly)
+            {
+
+                PayAmount = (investmentModel.InvestAmount * investmentModel.RateReturn) / 100 * 12;
+            }
+            return base.OnInitializedAsync();
+        }
+
+
+    }

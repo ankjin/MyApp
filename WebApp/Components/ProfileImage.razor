@@ -1,0 +1,30 @@
+﻿@inject IPersonalInfoRepository _personalRepo
+
+<img class="@(IsCursorPointerOn ? "cursor-pointer":"") @(string.IsNullOrEmpty(HSize) ? "h-8":HSize)  @(string.IsNullOrEmpty(WSize) ? "w-8":WSize) @CssOptions" src="@Src" alt="@Alt" />
+
+@code { 
+    [Parameter]
+    public bool IsCursorPointerOn { get; set; }
+    [Parameter]
+    public string HSize { get; set; }
+    [Parameter]
+    public string WSize { get; set; }
+    [Parameter]
+    public string CssOptions { get; set; }
+    [Parameter]
+    public string Alt { get; set; }
+    [Parameter]
+    public string Src { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Src))
+        {
+            Src = "_content/webapp/myassets/resources/profileb.jpg";
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+
+}

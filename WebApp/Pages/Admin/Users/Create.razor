@@ -1,0 +1,53 @@
+﻿@page "/admin/users/create"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+
+    @inject IUserModelRepository _userRepo
+
+    <UsersForm TitleOperation="Create User" referByUser="referByUser" user="user" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+    @code {
+
+        private IEnumerable<SourcePartner> source;
+        private IEnumerable<User> referByUser;
+        private User user = new User();
+        private string Errormsg = "";
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            //category.ImageUrl = "/myassets/resources/avatar.svg";
+            referByUser = _userRepo.GetAll().Where(x => x.IsActive);
+
+            string rdm = Utility.CreateRandomPassword(10);
+            user.EmailAddress = "";
+            user.Password = rdm;
+        }
+
+        private void FormSubmit()
+        {
+            if (!string.IsNullOrEmpty(user.RoleId.ToString()))
+            {
+                user.Password = Utility.Encrypt(user.Password);
+                user.CreatedDate = DateTime.UtcNow;
+                _userRepo.Create(user);
+
+                _navManager.NavigateTo($"admin/users/index");
+            }
+            else
+            {
+                InvokeAsync(() =>
+                {
+                    Errormsg = "Role is required field";
+                    StateHasChanged();
+                });
+            }
+
+        }
+        private void FormCancel()
+        {
+            _navManager.NavigateTo($"admin/users/index");
+        }
+
+    }

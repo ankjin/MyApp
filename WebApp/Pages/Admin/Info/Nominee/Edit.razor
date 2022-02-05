@@ -1,0 +1,56 @@
+﻿@page "/admin/info/nominee/edit/{userId}"
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+@inject INomineeInfoRepository _nomineeRepo
+@inject IUserModelRepository _userRepo
+
+<NomineeForm TitleOperation="Update Banking Info" UserId="@userId" nomineeInfo="nomineeInfo"  OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+    private NomineeInfo nomineeInfo;
+    public User user;
+    private string Errormsg = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        nomineeInfo = _nomineeRepo.GetNomineeInfoByUserId(new Guid(userId));
+        if(nomineeInfo is null)
+        {
+            nomineeInfo = new();
+            nomineeInfo.DateOfBirth = DateTimeOffset.UtcNow.Date;
+        }
+    }
+
+    private void FormSubmit()
+    {
+        if(nomineeInfo.Id > 0)
+        {
+            _nomineeRepo.Update(nomineeInfo);
+        }
+        else
+        {
+            nomineeInfo.UserId = new Guid(userId);
+            _nomineeRepo.Create(nomineeInfo);
+        }
+
+
+        _navManager.NavigateTo($"admin/users/index");
+
+        //InvokeAsync(() =>
+        //{
+        //    Errormsg = "role is required field";
+        //    StateHasChanged();
+        //});
+
+    }
+    private void FormCancel()
+    {
+        _navManager.NavigateTo($"admin/users/index");
+    }
+
+}

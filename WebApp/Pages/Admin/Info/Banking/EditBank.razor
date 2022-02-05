@@ -1,0 +1,43 @@
+﻿@inject NavigationManager _navManager
+@inject IBankingInfoRepository _bankingRepo
+
+<BankingForm TitleOperation="Update Banking Info" UserId="@bankInfo.UserId.ToString()" bankInfo="bankInfo" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+
+@code {
+
+    [Parameter]
+    public int BankinfoId { get; set; }
+    private BankingInfo bankInfo;
+    public User user;
+    private string Errormsg = "";
+
+    [Parameter]
+    public EventCallback<int> BankRenderOption { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        bankInfo = _bankingRepo.GetById(BankinfoId);
+        if(bankInfo is null)
+        {
+            FormCancel();
+        }
+    }
+
+    private void FormSubmit()
+    {
+        _bankingRepo.Update(bankInfo);
+
+        OnEventCallback();
+    }
+    private void FormCancel()
+    {
+        OnEventCallback();
+    }
+    private async void OnEventCallback()
+    {
+        await BankRenderOption.InvokeAsync(1);
+    }
+
+}

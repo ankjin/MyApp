@@ -1,0 +1,308 @@
+﻿@layout MainLayoutMember
+
+@attribute [Authorize(Roles = "Admin, User")]
+@page "/member/investment/calculator"
+
+<div class="mt-8">
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+
+        <HeaderCalculator calModel="calModel" OnValidSubmit="FormSubmit" />
+
+        <div class="bg-white">
+
+
+            <!-- Comparison table -->
+            <div class="max-w-2xl mx-auto bg-white py-16 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+
+                <!-- lg+ -->
+                <div class="hidden md:block">
+
+                    <table class="w-full h-px table-fixed">
+                        <caption class="sr-only">
+                            Pricing plan comparison
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th class="pb-4 pl-6 pr-6 text-sm font-medium text-gray-900 text-left" scope="col">
+                                    <span class="sr-only">Feature by</span>
+                                    <span>Plans</span>
+                                </th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <th class="w-1/4 pb-4 px-6 text-lg leading-6 font-medium text-gray-900 text-left" scope="col">@item.PlanType.GetDisplayName()</th>
+                                }
+                            </tr>
+
+                        </thead>
+                        <tbody class="border-t border-gray-200 divide-y divide-gray-200">
+
+                            <tr>
+                                <th class="py-8 pl-6 pr-6 align-top text-sm font-medium text-gray-900 text-left" scope="row">Investment Amount</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="h-full py-8 px-6 align-top">
+                                        <div class="h-full flex flex-col justify-between">
+                                            <div>
+                                                <p>
+                                                    <span class="text-xl lg:text-3xl font-medium text-gray-900">$@item.InvestmentAmount.ToString("n")</span>
+                                                </p>
+                                                <p class="mt-4 text-lg font-medium text-gray-500">@item.RateReturn %</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+
+                            <tr>
+                                <th class="py-3 pl-6 bg-gray-50 text-sm font-medium text-gray-900 text-left" colspan="4" scope="colgroup">Payout Calculator</th>
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">First Payout</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.FirstPayout.ToShortDateString()
+                                        <span class="sr-only">Included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">Terms / Annum</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.TermsPerAnnum
+                                        <span class="sr-only">Included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">Payout Amount</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.PayoutAmount
+                                        <span class="sr-only">Not included in Basic</span>
+                                    </td>
+                                }
+
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">Last Payout Date</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.LastPayoutDate.ToShortDateString()
+                                        <span class="sr-only">Not included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">Terms / 3 Years</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.TermsPerThreeYears
+                                        <span class="sr-only">Not included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">Maturity Date (38 Month)</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.InvestDateMaturity.ToShortDateString()
+                                        <span class="sr-only">Not included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+
+
+                            <tr>
+                                <th class="py-3 pl-6 bg-gray-50 text-sm font-medium text-gray-900 text-left" colspan="4" scope="colgroup">Withdrawal Slab</th>
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">1st</th>
+
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.FirstWithdrawalSlab.ToShortDateString()
+                                        <span class="sr-only">Included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">2nd</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.SecondWithdrawalSlab.ToShortDateString()
+                                        <span class="sr-only">Not included in Basic</span>
+                                    </td>
+                                }
+
+                            </tr>
+
+                            <tr>
+                                <th class="py-5 pl-6 pr-6 text-sm font-normal text-gray-500 text-left" scope="row">Final</th>
+                                @foreach (var item in calculatorModels)
+                                {
+                                    <td class="py-5 px-6">
+                                        @item.FinalWithdrawalSlab.ToShortDateString()
+                                        <span class="sr-only">Not included in Basic</span>
+                                    </td>
+                                }
+                            </tr>
+                            <tr>
+                                <th class="py-3 pl-6 bg-gray-50 text-sm font-medium text-gray-900 text-left" colspan="4" scope="colgroup">
+                                    Processing days 15 days in the beginning of investment and 45 days in the end of payout date (Processing day exclude benefit)
+                                </th>
+                            </tr>
+                        </tbody>
+                        @*<tfoot>
+                            <tr class="border-t border-gray-200">
+                                <th class="sr-only" scope="row">Choose your plan</th>
+                                <td class="pt-5 px-6">
+                                    <a href="#" class="block w-full bg-gradient-to-r from-orange-500 to-pink-500 border border-transparent rounded-md shadow py-2 text-sm font-semibold text-white text-center hover:to-pink-600">Buy Basic</a>
+                                </td>
+
+                                <td class="pt-5 px-6">
+                                    <a href="#" class="block w-full bg-gradient-to-r from-orange-500 to-pink-500 border border-transparent rounded-md shadow py-2 text-sm font-semibold text-white text-center hover:to-pink-600">Buy Essential</a>
+                                </td>
+
+                                <td class="pt-5 px-6">
+                                    <a href="#" class="block w-full bg-gradient-to-r from-orange-500 to-pink-500 border border-transparent rounded-md shadow py-2 text-sm font-semibold text-white text-center hover:to-pink-600">Buy Premium</a>
+                                </td>
+                            </tr>
+                        </tfoot>*@
+                    </table>
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+
+
+@code {
+    List<CalculatorModel> calculatorModels;
+
+    CalculatorModel calModel;
+    DateTime InvestDate = new DateTime(2022, 3, 12);
+    decimal InvestAmt = 0;
+    int InvestRate = 0;
+
+    protected override Task OnInitializedAsync()
+    {
+        calModel = new();
+        calModel.InvestDate = InvestDate = DateTime.UtcNow;
+        calModel.InvestmentAmount = InvestAmt = 100000;
+        calModel.RateReturn = InvestRate = 4;
+
+
+        calculatorModels = new();
+
+        foreach (PlanType e in Enum.GetValues(typeof(PlanType)))
+        {
+            calculatorModels.Add(SetCalculator(e));
+        }
+
+
+        return base.OnInitializedAsync();
+    }
+
+    private void FormSubmit()
+    {
+        InvestDate = calModel.InvestDate;
+        InvestAmt = calModel.InvestmentAmount;
+        InvestRate = calModel.RateReturn;
+
+        calculatorModels = new();
+
+        foreach (PlanType e in Enum.GetValues(typeof(PlanType)))
+        {
+            calculatorModels.Add(SetCalculator(e));
+        }
+
+        InvokeAsync(() =>
+        {
+            //Errormsg = "role is required field";
+            StateHasChanged();
+        });
+    }
+
+    private CalculatorModel SetCalculator(PlanType plan)
+    {
+        CalculatorModel calculatorModel = new();
+        calculatorModel.PlanType = plan;
+        calculatorModel.InvestmentAmount = InvestAmt;
+        calculatorModel.InvestDate = InvestDate;
+
+        switch (plan)
+        {
+            case PlanType.Monthly:
+                calculatorModel.RateReturn = InvestRate;
+                calculatorModel.FirstPayout = InvestDate.Date;
+                calculatorModel.TermsPerAnnum = 12;
+                calculatorModel.PayoutAmount = (InvestAmt * calculatorModel.RateReturn) / 100;
+                break;
+            case PlanType.Half_Yearly:
+                calculatorModel.RateReturn = InvestRate + 1;
+                calculatorModel.FirstPayout = InvestDate.Date.AddMonths(6);
+                calculatorModel.TermsPerAnnum = 2;
+                calculatorModel.PayoutAmount = (InvestAmt * calculatorModel.RateReturn) / 100 * 6;
+                break;
+            case PlanType.Yearly:
+                calculatorModel.RateReturn = InvestRate + 2;
+                calculatorModel.FirstPayout = InvestDate.Date.AddYears(1);
+                calculatorModel.TermsPerAnnum = 1;
+                calculatorModel.PayoutAmount = (InvestAmt * calculatorModel.RateReturn) / 100 * 12;
+                break;
+            default:
+                break;
+        }
+
+        calculatorModel.LastPayoutDate = InvestDate.AddYears(3);
+        calculatorModel.TermsPerThreeYears = calculatorModel.TermsPerAnnum * 3;
+        calculatorModel.InvestDateMaturity = InvestDate.AddMonths(38);
+        calculatorModel.FirstWithdrawalSlab = InvestDate.AddDays(365);
+        calculatorModel.SecondWithdrawalSlab = calculatorModel.FirstWithdrawalSlab.AddYears(1);
+        calculatorModel.FinalWithdrawalSlab = calculatorModel.SecondWithdrawalSlab.AddYears(1);
+
+        return calculatorModel;
+    }
+
+    private DateTime GetInvestDate()
+    {
+        InvokeAsync(() =>
+        {
+            InvestDate = DateTime.UtcNow;
+            StateHasChanged();
+        });
+        return InvestDate;
+    }
+
+
+}

@@ -1,0 +1,138 @@
+﻿@layout MainLayoutMember
+
+@attribute [Authorize(Roles = "Admin, User")]
+@page "/member/nominee/{userId}"
+
+@inject INomineeInfoRepository _nomineeRepo
+
+<div class="mt-8">
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        @if (nomineeInfo is not null)
+        {
+
+            <div class="pt-8">
+                <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+
+
+                    <div class="sm:col-span-3">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            Name
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.Name
+                                            </div>
+                    </div>
+
+
+                    <div class="sm:col-span-3">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            Date of Birth
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.DateOfBirth
+                                            </div>
+                    </div>
+
+
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            Mobile Number
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.MobileNumber
+                                            </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            Email
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.Email
+                                            </div>
+                    </div>
+
+
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            ID Type1
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.IDType1
+                                            </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            ID Number1
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.IDNumber1
+                                            </div>
+                    </div>
+
+
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            ID Type2
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.IDType2
+                                            </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            ID Number2
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.IDNumber2
+                                            </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                            Address
+                        </label>
+                        <div class="mt-1">
+                            @nomineeInfo.NomineeAddress
+                                            </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+
+        }
+
+
+
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string userId { get; set; }
+
+    NomineeInfo nomineeInfo;
+
+    protected override Task OnInitializedAsync()
+    {
+        nomineeInfo = _nomineeRepo.GetNomineeInfoByUserId(new Guid(userId));
+        return base.OnInitializedAsync();
+    }
+
+
+
+}

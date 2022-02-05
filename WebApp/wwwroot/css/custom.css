@@ -1,0 +1,15 @@
+﻿.blazored-modal {
+    display: flex;
+    z-index: 102;
+    flex-direction: column;
+    background-color: transparent;
+    border-radius: 4px;
+    border: none;
+    padding: 0.5rem;
+    box-shadow:none;
+}
+
+/* File upload by click image thumbnail */
+.image-upload > input {
+    display: none;
+}

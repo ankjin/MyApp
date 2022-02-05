@@ -1,0 +1,195 @@
+﻿@page "/admin/investment/index/{UserId}"
+@attribute [Authorize(Roles = "Admin")]
+
+@using System.ComponentModel.DataAnnotations
+@inject IInvestmentModelRepository _investRepo
+@inject IModalService _modal
+@inject IEmailSender _emailSender
+
+@if (investmentModel != null)
+{
+
+    <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Plan
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Amount
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Investment Date
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Maturity Date
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Rate Return
+                                </th>
+                                <th scope="col" class="relative px-6 py-3">
+                                    <a href="admin/investment/create/@UserId">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach (var item in investmentModel)
+                            {
+
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    @item.PlanType
+                                                </div>
+                                                <div class="text-sm text-gray-500">
+                                                    @item.InvestAmount
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    @*<td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
+                                            <div class="text-sm text-gray-500">Optimization</div>
+                                        </td>*@
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @item.InvestDate.ToShortDateString()
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @item.InvestDateMaturity.ToShortDateString()
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @item.RateReturn %
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="flex mt-3 px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a class="px-2" href="admin/investment/edit/@item.Id">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                        </a>
+                                        <a class="px-2 cursor-pointer" @onclick="@((p) => DeleteItem(item.Id, item.InvestAmount))">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </a>
+                                        |
+                                        <a class="px-2" href="admin/investment-payout/index/@item.UserModelId/@item.Id.ToString()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    public IEnumerable<InvestmentModel> investmentModel;
+    private int OddEven;
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        investmentModel = await _investRepo.GetInvestmentByUserIdAsync(new Guid(UserId));
+    }
+
+    private InvestmentModel GetUserById(string id)
+    {
+        return _investRepo.GetByGuid(new Guid(id));
+    }
+
+
+    private async void DeleteItem(Guid id, decimal itemName)
+    {
+
+
+        var parameters = new ModalParameters();
+        parameters.Add("paramString", itemName.ToString());
+
+
+        var options = new ModalOptions()
+        {
+            HideCloseButton = true,
+            DisableBackgroundCancel = false,
+            Class = "blazored-modal",
+            HideHeader = true,
+            Animation = ModalAnimation.FadeInOut(0.5)
+        };
+
+        var login = _modal.Show<Throw>("", parameters, options);
+
+        var result = await login.Result;
+
+        if (!result.Cancelled)
+        {
+            InvestmentModel u = _investRepo.GetByGuid(id);
+
+            //_userRepo.Delete(u);
+
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+    }
+
+    private async void ComposeEmail(User u)
+    {
+        string formSubj = "Membership Account Information";
+
+        if (new EmailAddressAttribute().IsValid(u.EmailAddress))
+        {
+            //string validateToken = ""; //Request.Form["g-recaptcha-response"]; //Request["g-recaptcha-response"];
+            //if (string.IsNullOrEmpty(validateToken))
+            //{
+            //    //ModelState.AddModelError("Capt", "Invalid captcha, try again.");
+
+            //    //ViewBag.JumpTo = "jumpToDetails"; //To maintain the scroll position
+
+            //    //return View(mdl);
+            //}
+
+            //feedback.SubmitDate = CommonUtils.GetDateTimeNow();
+
+
+            if (!string.IsNullOrEmpty(u.EmailAddress))
+            {
+                string msg = "Dear Member," + System.Environment.NewLine + System.Environment.NewLine +
+                            "Please find your membership information below: " + System.Environment.NewLine + System.Environment.NewLine +
+                            "Name : " + u.FirstName + " " + u.LastName + System.Environment.NewLine + System.Environment.NewLine +
+                            "Mobile : " + u.Mobile + System.Environment.NewLine + System.Environment.NewLine +
+                            "Email : " + u.EmailAddress + System.Environment.NewLine + System.Environment.NewLine + System.Environment.NewLine +
+                            "Regards," + System.Environment.NewLine + System.Environment.NewLine +
+                            "Web Admin Team";
+                await _emailSender.SendEmailAsync(u.EmailAddress, formSubj, msg);
+            }
+        }
+    }
+
+}

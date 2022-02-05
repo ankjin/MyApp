@@ -1,0 +1,213 @@
+﻿@using System.IO
+@inject IJSRuntime js
+
+
+<div class="relative bg-white">
+    <div class="absolute inset-0">
+        <div class="absolute inset-y-0 left-0 w-1/2 bg-gray-50"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto lg:grid lg:grid-cols-5">
+
+        <HeaderInfo UserId="@UserId" />
+
+
+        <div class="bg-white py-12 px-4 sm:px-6 lg:col-span-3 lg:px-8">
+            <div class="max-w-lg mx-auto lg:max-w-none">
+
+
+                <div>
+                    <div>
+                        <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+                            Nominee Information
+                        </h2>
+
+                        <EditForm class="mt-9 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8" Model="nomineeInfo" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator />
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                                <div class="mt-1">
+                                    <InputDate @bind-Value="@nomineeInfo.DateOfBirth" type="date" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.DateOfBirth" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Name</label>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.Name" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.Name" />
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">Mobile</label>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.MobileNumber" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.MobileNumber" />
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">Email</label>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.Email" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.Email" />
+                                </div>
+                            </div>
+
+
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">ID Type1</label>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.IDType1" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.IDType1" />
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <div class="flex justify-between">
+                                    <label class="block text-sm font-medium text-gray-700">ID Number1</label>
+                                    @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+                                </div>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.IDNumber1" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.IDNumber1" />
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">ID Type2</label>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.IDType2" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.IDType2" />
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <div class="flex justify-between">
+                                    <label class="block text-sm font-medium text-gray-700">ID Number2</label>
+                                    @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+                                </div>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.IDNumber2" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.IDNumber2" />
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <div class="flex justify-between">
+                                    <label class="block text-sm font-medium text-gray-700">Address</label>
+                                    @*<span id="phone-description" class="text-sm text-gray-500">Optional</span>*@
+                                </div>
+                                <div class="mt-1">
+                                    <InputText @bind-Value="@nomineeInfo.NomineeAddress" type="text" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md" />
+                                    <ValidationMessage For="() => nomineeInfo.NomineeAddress" />
+                                </div>
+                            </div>
+
+                            @*<div class="sm:col-span-2">
+                                <div class="flex justify-between">
+                                    <label for="how-can-we-help" class="block text-sm font-medium text-gray-700">How can we help you?</label>
+                                    <span id="how-can-we-help-description" class="text-sm text-gray-500">Max. 500 characters</span>
+                                </div>
+                                <div class="mt-1">
+                                    <textarea id="how-can-we-help" name="how-can-we-help" aria-describedby="how-can-we-help-description" rows="4" class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"></textarea>
+                                </div>
+                            </div>*@
+
+                            <div class="text-right sm:col-span-2">
+                                <button type="button" @onclick="@OnCancelSubmit" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Submit
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    [Parameter]
+    public string TitleOperation { get; set; }
+    [Parameter]
+    public NomineeInfo nomineeInfo { get; set; }
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnCancelSubmit { get; set; }
+    [Parameter]
+    public string ErrorMsg { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            //await js.CKEditorFileman1();
+            //await js.CKEditorFileman2();
+            //await js.CustomImage1();
+        }
+
+    }
+
+    private void OnSelectionChange(ChangeEventArgs changeEventArgs)
+    {
+        //user.RoleId = int.Parse(changeEventArgs.Value.ToString());
+
+        InvokeAsync(() =>
+        {
+            //if (user.RoleId > 0)
+            //{
+            //    ErrorMsg = "";
+            //}
+            //else
+            //{
+            //    ErrorMsg = "Role is required field";
+            //}
+            StateHasChanged();
+        });
+    }
+
+
+    private bool tab1 { get; set; } = true;
+    private bool tab2 { get; set; }
+    private bool tab3 { get; set; }
+    private void TabItemClick(int tabId)
+    {
+        tab1 = false;
+        tab2 = false;
+        tab3 = false;
+
+        switch (tabId)
+        {
+            case 1:
+                tab1 = true;
+                break;
+            case 2:
+                tab2 = true;
+                break;
+            case 3:
+                tab3 = true;
+                break;
+        }
+    }
+
+
+}

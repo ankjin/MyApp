@@ -1,0 +1,77 @@
+﻿@page "/admin/additional/information/{UserId}"
+
+@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager _navManager
+
+<div class="relative bg-white">
+    <div class="absolute inset-0">
+        <div class="absolute inset-y-0 left-0 w-1/2 bg-gray-50"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto lg:grid lg:grid-cols-6">
+
+
+        <div class="bg-gray-50 py-16 px-4 sm:px-6 lg:col-span-2 lg:px-8 lg:py-16">
+            <HeaderInfo UserId="@UserId" />
+        </div>
+
+        <div class="bg-white py-12 px-4 sm:px-6 lg:col-span-4 lg:px-8">
+
+
+            <div class="max-w-lg mx-auto lg:max-w-none">
+
+
+
+                <TabComponent>
+                    <Personal>
+                        <PersonalFormComponent UserId="@UserId" />
+                    </Personal>
+                    <Banking>
+                        <BankingFormComponent UserId="@UserId" />
+                    </Banking>
+                    <Nominee>
+                        <NomineeFormComponent UserId="@UserId" />
+                    </Nominee>
+                </TabComponent>
+
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+@*<InvestmentPage UserId="@UserId" />*@
+
+
+<FragmentContainer UserId="@UserId" />
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+
+    //User user;
+
+    protected override void OnInitialized()
+    {
+        //user = _userRepo.GetByGuid(new Guid(UserId));
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+        }
+
+    }
+
+}
