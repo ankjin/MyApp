@@ -62,7 +62,8 @@
                     Total Invested
                 </span>
                 <h2 class="text-3xl font-extrabold tracking-tight sm:text-3xl">
-                    @user.InvestmentModels.Sum(x => x.InvestAmount).ToString("n2")
+                    @*@user.InvestmentModels.Sum(x => x.InvestAmount).ToString("n2")*@
+                    @UserTotalInvestedAmount.ToString("n2")
                 </h2>
             </dd>
         </div>
@@ -90,6 +91,8 @@
 
 
 @code {
+    [Parameter]
+    public decimal UserTotalInvestedAmount { get; set; }
     [Parameter]
     public string UserId { get; set; }
     [Parameter]

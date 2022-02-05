@@ -175,7 +175,10 @@
         bankingInfos = await _bankingRepo.GetBankingInfoByUserIdAsync(investmentModel.UserModelId);
         if(bankingInfos.Count() > 0)
         {
-            investmentModel.BankingInfoId = bankingInfos.Where(x => x.IsPrimary).FirstOrDefault().Id;
+            if(bankingInfos.Where(x => x.IsPrimary).FirstOrDefault() is not null)
+            {
+                investmentModel.BankingInfoId = bankingInfos.Where(x => x.IsPrimary).FirstOrDefault().Id;
+            }
         }
     }
 
@@ -192,9 +195,9 @@
     }
 
     private void oninput()
-        {
+    {
 
-        }
+    }
 
     private void OnDateChange(ChangeEventArgs changeEventArgs)
     {

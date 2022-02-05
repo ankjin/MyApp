@@ -11,7 +11,7 @@
 
 
         <div class="bg-gray-50 py-16 px-4 sm:px-6 lg:col-span-2 lg:px-8 lg:py-16">
-            <HeaderInfo UserId="@UserId" />
+            <HeaderInfo UserId="@UserId" UserTotalInvestedAmount="UserTotalInvestedAmount" />
         </div>
 
         <div class="bg-white py-12 px-4 sm:px-6 lg:col-span-4 lg:px-8">
@@ -45,16 +45,14 @@
 
     </div>
 </div>
-
-
-@*<InvestmentPage UserId="@UserId" />*@
-
-
-<FragmentContainer UserId="@UserId" />
-
+<CascadingValue Value="UserTotalInvestedAmount">
+    <FragmentContainer UserId="@UserId" UserTotalInvestedAmount="UTIAmount" />
+</CascadingValue>
 @code {
     [Parameter]
     public string UserId { get; set; }
+
+    public decimal UserTotalInvestedAmount;
 
     //User user;
 
@@ -71,7 +69,11 @@
         if (firstRender)
         {
         }
+    }
 
+    private void UTIAmount(decimal amt)
+    {
+        UserTotalInvestedAmount = amt;
     }
 
 }

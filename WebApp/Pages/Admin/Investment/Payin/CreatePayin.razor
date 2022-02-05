@@ -2,7 +2,7 @@
 @inject NavigationManager _navManager
 @inject IInvestmentModelRepository _investRepo
 
-    <InvestmentForm TitleOperation="Create Investment" investmentModel="@investmentModel" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
+    <PayinForm TitleOperation="Create Investment" investmentModel="@investmentModel" OnValidSubmit="FormSubmit" OnCancelSubmit="FormCancel" ErrorMsg="@Errormsg" />
 
     @code {
         [Parameter]
@@ -32,7 +32,7 @@
                 investmentModel.CreatedDate = DateTime.UtcNow;
                 investmentModel.IsActive = true;
                 _investRepo.Create(investmentModel);
-
+                
                 OnEventCallback();
             }
             else
