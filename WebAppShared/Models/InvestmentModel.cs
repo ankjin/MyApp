@@ -14,6 +14,11 @@ namespace WebAppShared.Models
         /// UserId already been use in public virtual BankingInfo BankingInfo { get; set; }
         /// </summary>
         public Guid UserModelId { get; set; }
+
+        /// <summary> Comment Out the [ForeignKey]
+        /// Introducing FOREIGN KEY constraint 'FK_InvestmentModels_Users_UserModelId' on table 'InvestmentModels' may cause cycles or multiple cascade paths. Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+        /// Could not create constraint or index.See previous errors.
+        /// </summary>
         [ForeignKey("UserModelId")]
         public virtual User User { get; set; }
 
@@ -22,11 +27,12 @@ namespace WebAppShared.Models
         public string RefNumber { get; set; }
         public PlanType PlanType { get; set; }
 
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal InvestAmount { get; set; }
         public DateTime InvestDate { get; set; }
         public DateTime InvestDateMaturity { get; set; }
-        public int RateReturn { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal RateReturn { get; set; }
 
         public int BankingInfoId { get; set; }
         [ForeignKey("BankingInfoId")]

@@ -10,11 +10,11 @@
     <div class="relative max-w-7xl mx-auto lg:grid lg:grid-cols-6">
 
 
-        <div class="bg-gray-50 py-16 px-4 sm:px-6 lg:col-span-2 lg:px-8 lg:py-16">
-            <HeaderInfo UserId="@UserId" UserTotalInvestedAmount="UserTotalInvestedAmount" />
+        <div class="bg-gray-50 py-8 px-4 sm:px-6 lg:col-span-2 lg:px-8 lg:py-8">
+            <HeaderInfo UserId="@UserId" UserTotalInvestedAmount="UserTotalInvestedAmount" UserTotalPayoutAmount="UserTotalPayoutAmount" />
         </div>
 
-        <div class="bg-white py-12 px-4 sm:px-6 lg:col-span-4 lg:px-8">
+        <div class="bg-white py-8 px-4 sm:px-6 lg:col-span-4 lg:px-8">
 
 
             <div class="max-w-lg mx-auto lg:max-w-none">
@@ -45,14 +45,18 @@
 
     </div>
 </div>
-<CascadingValue Value="UserTotalInvestedAmount">
-    <FragmentContainer UserId="@UserId" UserTotalInvestedAmount="UTIAmount" />
+<CascadingValue Value="UserTotalPayoutAmount">
+    <CascadingValue Value="UserTotalInvestedAmount">
+        <FragmentContainer UserId="@UserId" UserTotalInvestedAmtPayoutAmt="@((args)=> UTIAmountPAmount(((decimal, decimal))args))" />
+    </CascadingValue>
 </CascadingValue>
+
 @code {
     [Parameter]
     public string UserId { get; set; }
 
     public decimal UserTotalInvestedAmount;
+    public decimal UserTotalPayoutAmount;
 
     //User user;
 
@@ -71,9 +75,10 @@
         }
     }
 
-    private void UTIAmount(decimal amt)
+    private void UTIAmountPAmount((decimal a, decimal b) args)
     {
-        UserTotalInvestedAmount = amt;
+        UserTotalInvestedAmount = args.a;
+        UserTotalPayoutAmount = args.b;
     }
 
 }

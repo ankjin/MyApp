@@ -45,14 +45,13 @@
 
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    @item.PlanType.GetDisplayName()
+                                        <div class="flex items-center">                                            
+                                            <div class="">
+                                                <div class="text-md font-medium text-gray-900">
+                                                    @item.InvestAmount.ToString("n2")
                                                 </div>
                                                 <div class="text-sm text-gray-500">
-                                                    @item.InvestAmount.ToString("n2")
+                                                    @item.PlanType.GetDisplayName()
                                                 </div>
                                             </div>
                                         </div>
@@ -117,14 +116,22 @@
     public EventCallback<int> RenderView { get; set; }
     [Parameter]
     public EventCallback<string> ReturnedId { get; set; }
+    //[Parameter]
+    //public EventCallback<decimal> TotalInvestedAmount { get; set; }
     [Parameter]
-    public EventCallback<decimal> TotalInvestedAmount { get; set; }
+    public EventCallback<(decimal, decimal)> TotalInvestedAmtPayoutAmt{ get; set; }
 
     protected async override Task OnInitializedAsync()
     {
 
         investmentModels = await _investRepo.GetInvestmentByUserIdWithPayoutsAsync(new Guid(UserId));
-        await TotalInvestedAmount.InvokeAsync(investmentModels.Sum(x => x.InvestAmount));
+
+        var investedAmt = investmentModels.Sum(x => x.InvestAmount);
+        var payoutAmt = investmentModels.Sum(x => x.InvestmentPayouts.Sum(x => x.PayoutAmount));
+
+        //await TotalInvestedAmount.InvokeAsync(investmentModels.Sum(x => x.InvestAmount));
+
+        await TotalInvestedAmtPayoutAmt.InvokeAsync((investedAmt, payoutAmt));
     }
 
     private InvestmentModel GetUserById(string id)

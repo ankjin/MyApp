@@ -7,7 +7,7 @@
         <ChildContentPayin>
             @if (RenderOption == 1)
             {
-                <IndexPayin UserId="@UserId" RenderView="RenderView" ReturnedId="CallBackId" TotalInvestedAmount="TotalInvestedAmount" />
+                <IndexPayin UserId="@UserId" RenderView="RenderView" ReturnedId="CallBackId" TotalInvestedAmtPayoutAmt="@((args)=> MyTotalAmount(((decimal, decimal))args))" />
             }
             @if (RenderOption == 2)
             {
@@ -36,7 +36,7 @@
     string InvestModelId = "";
 
     [Parameter]
-    public EventCallback<decimal> UserTotalInvestedAmount { get; set; }
+    public EventCallback<(decimal, decimal)> UserTotalInvestedAmtPayoutAmt { get; set; }
 
     protected override void OnInitialized()
     {
@@ -63,7 +63,10 @@
     }
     private void TotalInvestedAmount(decimal totalInvestAmount)
     {
-        UserTotalInvestedAmount.InvokeAsync(totalInvestAmount);
+        //UserTotalInvestedAmount.InvokeAsync(totalInvestAmount);
     }
-
+    private async void MyTotalAmount((decimal a, decimal b) args)
+    {
+        await UserTotalInvestedAmtPayoutAmt.InvokeAsync((args.a, args.b));
+    }
 }

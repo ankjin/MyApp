@@ -2,11 +2,7 @@
 @inject IPersonalInfoRepository _personalRepo
 
     <div>
-        @*<h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Personal Information
-        </h2>*@
-
-        <EditForm class="mt-9 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8" Model="personalInfo" OnValidSubmit="OnValidSubmit">
+        <EditForm class="mt-4 grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6" Model="personalInfo" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />
 
             @*<div class="sm:col-span-2">
